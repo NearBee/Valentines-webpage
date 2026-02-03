@@ -38,22 +38,23 @@ A fun, interactive single-page website to ask that special someone to be your Va
 
 Edit the following lines in `index.html`:
 
-**Line 86** - Initial image:
+**Line 166** - Initial image:
 ```html
-
+<img src="initial-image.gif" alt="Valentine's Question" id="initial-image">
 ```
 
-**Line 96** - Success image:
+**Line 177** - Success image:
 ```html
-
+<img src="success-image.gif" alt="YIPPEE!" id="success-image">
 ```
 
-**Line 103** - Celebration sound:
+**Line 184/185** - Celebration sound:
 ```html
-
+<source src="celebration-sound.mp3" type="audio/mpeg">
+<source src="celebration-sound.wav" type="audio/wav">
 ```
 
-**Line 89** - Question text (optional):
+**Line 168** - Question text (optional):
 ```html
 Will you be my valentine?
 ```
