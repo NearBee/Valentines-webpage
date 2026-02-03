@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-widthm initial-scale=1.0">
+    <title>🖤 Valentine's Day 💛</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Arial", sans-serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .image-container {
+            margin-bottom: 30px;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            font-size: 28px;
+            color: #d63384;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            min-height: 60px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-yes {
+            background-color: #ffd700;
+            color: #333;
+        }
+
+        .btn-yes:hover {
+            background-color: #ffed4e;
+        }
+
+        .btn-no {
+            background-color: white;
+            color: #666;
+            border: 2px solid #ddd;
+        }
+
+        .btn-no:hover {
+            background-color: #f8f8f8;
+        }
+
+        .fade-out {
+            animation: fadeOut 1s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+            }
+        }
+
+        .success-container {
+            display: none;
+        }
+
+        .success-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .yippee {
+            font-size: 48px;
+            color: #d63384;
+            font-weight: bold;
+            margin-top: 20px;
+            animation: bounce 0.6s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="container">
+        <div id="question-container">
+            <div class="image-container">
+                <img src="initial-image.gif" alt="Valentine's Question" id="initial-image">
+            </div>
+            <div class="question">Will you be my valentine?</div>
+            <div class="buttons" id="button-container">
+                <button class="btn btn-yes" id="yes-btn">YES</button>
+                <button class="btn btn-no" id="no-btn">NO</button>
+            </div>
+        </div>
+
+        <div class="success-container" id="success-container">
+            <div class="image-container">
+                <img src="success-image.gif" alt="YIPPEE!" id="success-image">
+            </div>
+            <div class="yippee">YIPPEE!</div>
+        </div>
+    </div>
+
+    <audio id="success-sound" preload="auto">
+        <source src="celebration-sound.mp3" type="audio/mpeg">
+        <source src="celebration-sound.wav" type="audio/wav">
+    </audio>
+
+    <script>
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const buttonContainer = document.getElementById('button-container');
+        const questionContainer = document.getElementById('question-container');
+        const successContainer = document.getElementById('success-container');
+        const successSound = document.getElementById('success-sound')
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const ctx = confettiCanvas.getContext('2d');
+
+        // Set canvas size
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        });
+
+        // Set sound volume to 50% to not startle
+        successSound.volume = 0.5;
+
+        // Confetti Settings
+        let confettiPieces = [];
+
+        function createConfetti() {
+            const colors = ['#ff6b9d', '#ffd700', '#ff1493', '#ff69b4', '#ffc0cb']
+            for (let i = 0; i < 150; i++) {
+                confettiPieces.push({
+                    x: Math.random() * confettiCanvas.width,
+                    y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+                    width: Math.random() * 10 + 5,
+                    height: Math.random() * 10 + 5,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    speedY: Math.random() * 3 - 2,
+                    speedX: Math.random() * 2 - 1,
+                    rotation: Math.random() * 360,
+                    rotationSpeed: math.random() * 5 - 2.5
+                });
+            }
+        }
+
+        function drawConfetti() {
+            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+            confettiPieces.forEach((piece, index) => {
+                ctx.save();
+                ctx.translate(piece.x, piece.y);
+                ctx.rotate(piece.rotation * Math.PI / 180);
+                ctx.fillStyle = piece.color;
+                ctx.fillRect(-piece.width / 2, -piece.height / 2, piece.width, piece.height);
+                ctx.restore();
+
+                // Update position
+                piece.y += piece.speedY;
+                piece.x += piece.speedX;
+                piece.rotation += piece.rotationSpeed;
+
+                // Remove confetti that's off screen
+                if (piece.y > confettiCanvas.height) {
+                    confettiPieces.splice(index, 1);
+                }
+            });
+
+            if (confettiPieces.length > 0) {
+                requestAnimationFrame(drawConfetti);
+            }
+        }
+
+        function celebrate() {
+            // Hide question, show success
+            questionContainer.style.display = 'none';
+            successContainer.classList.add('show');
+
+            // Play sound (with error handling in case file doesn't exist yet)
+            successSound.play().catch(err => {
+                console.log('Sound not loaded yet:', err);
+            });
+
+            // Start confetti
+            createConfetti();
+            drawConfetti();
+        }
+
+        // YES button click
+        yesBtn.addEventListener('click', celebrate);
+
+        // No button click - fade out and replace
+        noBtn.addEventListener('click', () => {
+            // Add fade out animation
+            noBtn.classList.add('fade-out');
+
+            // After animation complete (around 1 second), remove NO button and add new YES button
+            setTimeout(() => {
+                noBtn.remove();
+
+                // Create new YES button
+                const newYesBtn = document.createElement('button');
+                newYesBtn.textContent = 'YES';
+                newYesbtn.className = 'btn btn-yes';
+                newYesBtn.addEventListener('click', celebrate);
+
+                // Add to button container
+                buttonContainer.appendChild(newYesBtn);
+            }, 1000)
+        });
+    </script>
+</body>
+</html>
