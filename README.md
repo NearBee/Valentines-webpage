@@ -137,10 +137,10 @@ successSound.volume = 0.5;  // 0.0 to 1.0 (50% default)
 
 ## 📸 Screenshots
 ### Landing Page:
-[Question](screenshots/initial_page.png)
+![Question](screenshots/initial_page.png)
 
 ### Demo Gif
-[Success](screenshots/RM_gif.mp4)
+![Success](screenshots/RM_gif.gif)
 
 ## 📝 License
 
