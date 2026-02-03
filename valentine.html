@@ -101,11 +101,21 @@
                 opacity: 0;
             }
         }
+        
+        .fade-in {
+            animation: fadeIn 1s ease-in forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
 
         .success-container {
             display: none;
         }
-
+        
         .success-container.show {
             display: block;
             animation: fadeIn 0.5s ease-in;
@@ -274,11 +284,15 @@
                 // Create new YES button
                 const newYesBtn = document.createElement('button');
                 newYesBtn.textContent = 'YES';
-                newYesBtn.className = 'btn btn-yes';
+                newYesBtn.className = 'btn btn-yes fade-in';
                 newYesBtn.addEventListener('click', celebrate);
 
                 // Add to button container
                 buttonContainer.appendChild(newYesBtn);
+
+                setTimeout(() => {
+                    newYesBtn.classList.remove('fade-in');
+                }, 1000)
             }, 1000)
         });
     </script>
